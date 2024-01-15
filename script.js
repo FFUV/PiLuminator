@@ -1,18 +1,23 @@
-document.getElementById('generate-btn').addEventListener('click', function() {
-  var digits = document.getElementById('digits').value;
+function generatePi() {
+  const digitsInput = document.getElementById("digits");
+  const piResult = document.getElementById("pi-result");
+
+  const digits = parseInt(digitsInput.value, 10);
 
   if (digits < 1 || digits > 100) {
-    alert('Please enter a number between 1 and 100.');
+    piResult.textContent = "Please enter a number between 1 and 100.";
     return;
   }
 
-  var generatedPi = generatePi(digits);
-  document.getElementById('pi-result').textContent = 'Generated Pi: ' + generatedPi;
-});
-
-function generatePi(digits) {
-  // Logic to generate Pi goes here
-  // You can implement your desired algorithm
-  // (e.g., BBP formula, Monte Carlo method, etc.)
-  // and return the generated Pi value
+  fetch(`/generate_pi?digits=${digits}`)
+    .then(response => response.text())
+    .then(data => {
+      piResult.textContent = `Generated Pi:\n${data}`;
+    })
+    .catch(error => {
+      console.log(error);
+      piResult.textContent = "An error occurred. Please try again later.";
+    });
 }
+
+document.getElementById("generate-btn").addEventListener("click", generatePi);
