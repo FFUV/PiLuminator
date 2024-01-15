@@ -1,54 +1,23 @@
-function computePi(digits) {
-  // Pi computation algorithm
-  let pi = "3";
-  for (let i = 0; i < digits; i++) {
-    let term = (4 / (i * 2 + 2)) * ((i % 4 < 2) ? -1 : 1);
-    pi += term;
-  }
-  return pi;
-}
+function calculatePi() {
+  var calculatedPi = document.getElementById('calculated-pi');
+  calculatedPi.textContent = 'Calculating...';
 
-function drawMonteCarloVisualization(canvas, iterations) {
-  const context = canvas.getContext("2d");
-  const width = canvas.width;
-  const height = canvas.height;
-  const centerX = width / 2;
-  const centerY = height / 2;
-  const radius = width / 2 - 10;
-  let insideCount = 0;
+  // Set the number of trials (increase for a more accurate result)
+  var numTrials = 1000000;
+  var insideCircle = 0;
 
-  context.clearRect(0, 0, width, height);
-  context.strokeStyle = "#FF0000";
-  context.fillStyle = "#FF0000";
-  context.beginPath();
-  context.arc(centerX, centerY, radius, 0, 2 * Math.PI);
-  context.stroke();
+  for (var i = 0; i < numTrials; i++) {
+      var x = Math.random();
+      var y = Math.random();
+      var distance = Math.sqrt((x * x) + (y * y));
 
-  for (let i = 0; i < iterations; i++) {
-    const x = Math.random() * width;
-    const y = Math.random() * height;
-    const distance = Math.sqrt(Math.pow(centerX - x, 2) + Math.pow(centerY - y, 2));
-    if (distance <= radius) {
-      context.fillRect(x, y, 1, 1);
-      insideCount++;
-    }
+      if (distance <= 1) {
+          insideCircle++;
+      }
   }
 
-  const estimatedPi = (insideCount / iterations) * 4;
-  return estimatedPi.toFixed(10);
+  var pi = (insideCircle / numTrials) * 4;
+  calculatedPi.textContent = pi.toFixed(10);
 }
 
-function updatePi(digits) {
-  const piDigitsElement = document.getElementById("pi-digits");
-  const piVisualizationCanvas = document.getElementById("pi-visualization");
-
-  const pi = computePi(digits);
-  piDigitsElement.textContent = pi;
-
-  const iterations = digits * 10000;
-  const estimatedPi = drawMonteCarloVisualization(piVisualizationCanvas, iterations);
-  console.log("Estimated Pi:", estimatedPi);
-}
-
-// Example usage
-updatePi(50);
+document.getElementById('start-button').addEventListener('click', calculatePi);
